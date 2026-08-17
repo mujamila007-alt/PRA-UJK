@@ -1,6 +1,6 @@
 import { initializeApp } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-app.js';
 import {
-  getAuth, setPersistence, browserLocalPersistence, onAuthStateChanged,
+  getAuth, setPersistence, browserSessionPersistence, onAuthStateChanged,
   signInWithEmailAndPassword, signOut, getIdTokenResult
 } from 'https://www.gstatic.com/firebasejs/12.17.1/firebase-auth.js';
 import {
@@ -12,7 +12,7 @@ import { firebaseConfig } from './firebase-config.js';
 export const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
 export const db = getFirestore(app);
-setPersistence(auth, browserLocalPersistence).catch(() => {});
+setPersistence(auth, browserSessionPersistence).catch(() => {});
 
 export {
   onAuthStateChanged, signInWithEmailAndPassword, signOut, getIdTokenResult,
