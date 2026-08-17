@@ -1,0 +1,32 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    function signedIn() { return request.auth != null; }
+    function isAdmin() { return signedIn() && request.auth.token.role == 'admin'; }
+    function isOwner(uid) { return signedIn() && request.auth.uid == uid; }
+
+    match /users/{uid} {
+      allow read: if isAdmin() || isOwner(uid);
+      allow write: if false;
+    }
+    match /settings/{docId} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+    match /questions/{qid} {
+      allow read: if signedIn();
+      allow write: if isAdmin();
+    }
+    match /answerKeys/{qid} {
+      allow read, write: if isAdmin();
+    }
+    match /attempts/{uid} {
+      allow read: if isAdmin() || isOwner(uid);
+      allow write: if false;
+      match /answers/{answerId} {
+        allow read: if isAdmin();
+        allow write: if false;
+      }
+    }
+  }
+}

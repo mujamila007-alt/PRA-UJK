@@ -1,0 +1,2 @@
+import { adminDb, requireAdmin, deleteAttempt, json, errorResponse } from '../lib/firebaseAdmin.js';
+export async function POST(request){try{await requireAdmin(request);const b=await request.json();if(b.action==='reset'){await deleteAttempt(String(b.uid||''));return json({ok:true});}if(b.action==='clearAll'){const snap=await adminDb.collection('attempts').get();for(const d of snap.docs)await deleteAttempt(d.id);return json({ok:true});}return json({error:'Aksi tidak dikenal.'},400);}catch(e){return errorResponse(e);}}
